@@ -1,10 +1,9 @@
-import requests
 from fabric.api import settings, task, run
 from fabric.operations import local
 from fabric.context_managers import cd
 from fabric.contrib.files import exists
 
-from fabric_package_managment import apt
+from fabric_package_management import apt
 
 
 def docker(cmd):
@@ -22,9 +21,7 @@ def set_up():
     container = docker('run -d -p 22 %s' % image_name)
     ssh_port = docker('port %s 22' % container).split(':')[-1]
     host = '127.0.0.1'
-    container_host = '%(user)s@%(host)s:%(port)s' % {'user': 'root',
-                                                     'host': host,
-                                                     'port': ssh_port}
+    container_host = '%(host)s:%(port)s' % {'host': host, 'port': ssh_port}
 
     return container, container_host
 
@@ -63,7 +60,6 @@ def test_apt(container_host):
     print('All tests for fabric_package_managment.apt succeeded...')
 
 
-@task
 def test():
     container, container_host = set_up()
     try:
@@ -74,3 +70,6 @@ def test():
             print('All tests finished...')
     finally:
         tear_down(container)
+
+if __name__ == '__main__':
+    test()
