@@ -18,7 +18,7 @@ class TestCommand(Command):
         pass
 
     def run(self):
-        subprocess.call([sys.executable, '-m', 'tests.functional_tests'])
+        subprocess.call([sys.executable, '-m', 'unittest', 'tests.test_apt'])
 
 
 setup(
