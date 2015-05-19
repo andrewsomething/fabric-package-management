@@ -1,0 +1,9 @@
+language: python
+python:
+  - "2.7"
+install:
+    - pip install fabric
+    - pip install nose
+    - curl -sLo - http://j.mp/install-travis-docker | sh -xe
+script:
+    - ./run 'docker build -t fab_sshd_ubuntu tests/ && source ~/virtualenv/python2.7/bin/activate && nosetests -vs'
