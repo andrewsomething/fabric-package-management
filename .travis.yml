@@ -6,4 +6,4 @@ install:
     - pip install nose
     - curl -sLo - http://j.mp/install-travis-docker | sh -xe
 script:
-    - ./run 'docker build -t fab_sshd_ubuntu tests/ && source ~/virtualenv/python2.7/bin/activate && nosetests -vs'
+    - ./run 'docker build -t fab_sshd_ubuntu tests/ && source ~/virtualenv/python2.7/bin/activate && nosetests -v'

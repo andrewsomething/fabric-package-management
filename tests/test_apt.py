@@ -36,7 +36,7 @@ class AptTest(unittest.TestCase):
         print('Destroying Docker container...')
         return docker('kill %s' % self.container)
 
-    def test_apt(self):
+    def test_update(self):
         with settings(host_string=self.container_host,
                       user='root',
                       password='functionaltests'):
@@ -45,27 +45,41 @@ class AptTest(unittest.TestCase):
             self.assertTrue(update.succeeded)
             self.assertEqual(update.command, 'apt-get update')
 
-            upgrade = apt.upgrade()
-            self.assertTrue(upgrade.succeeded)
-            self.assertEqual(upgrade.command, 'apt-get upgrade --yes')
-
-            dist_upgrade = apt.dist_upgrade()
-            self.assertTrue(dist_upgrade.succeeded)
-            self.assertEqual(dist_upgrade.command,
-                             'apt-get dist-upgrade --yes')
-
             update = apt.update(use_sudo=False, verbose=False)
             self.assertTrue(update.succeeded)
             self.assertEqual(update.command, 'apt-get update')
+
+    def test_upgrade(self):
+        with settings(host_string=self.container_host,
+                      user='root',
+                      password='functionaltests'):
+
+            upgrade = apt.upgrade()
+            self.assertTrue(upgrade.succeeded)
+            self.assertEqual(upgrade.command, 'apt-get upgrade --yes')
 
             upgrade = apt.upgrade(use_sudo=False, verbose=False)
             self.assertTrue(upgrade.succeeded)
             self.assertTrue(upgrade.command, 'apt-get upgrade --yes')
 
+    def test_dist_upgrade(self):
+        with settings(host_string=self.container_host,
+                      user='root',
+                      password='functionaltests'):
+            dist_upgrade = apt.dist_upgrade()
+            self.assertTrue(dist_upgrade.succeeded)
+            self.assertEqual(dist_upgrade.command,
+                             'apt-get dist-upgrade --yes')
+
             dist_upgrade = apt.dist_upgrade(use_sudo=False, verbose=False)
             self.assertTrue(dist_upgrade.succeeded)
             self.assertEqual(dist_upgrade.command,
                              'apt-get dist-upgrade --yes')
+
+    def test_install(self):
+        with settings(host_string=self.container_host,
+                      user='root',
+                      password='functionaltests'):
 
             install = apt.install(['bpython', 'git'],
                                   no_install_recommends=True)
@@ -82,6 +96,11 @@ class AptTest(unittest.TestCase):
             self.assertEqual(install.command, expt)
             self.assertTrue(exists('/usr/bin/htop'))
 
+    def test_source(self):
+        with settings(host_string=self.container_host,
+                      user='root',
+                      password='functionaltests'):
+
             with cd('/tmp'):
                 source = apt.source("python-libcloud", download_only=True)
             self.assertTrue(source.succeeded)
@@ -89,6 +108,11 @@ class AptTest(unittest.TestCase):
                              'apt-get source --download-only python-libcloud')
             self.assertTrue(exists('/tmp/libcloud*dsc'))
             self.assertFalse(exists('/tmp/libcloud*/'))
+
+    def test_remove(self):
+        with settings(host_string=self.container_host,
+                      user='root',
+                      password='functionaltests'):
 
             remove = apt.remove(['bpython', 'git'])
             self.assertTrue(remove.succeeded)
@@ -106,6 +130,11 @@ class AptTest(unittest.TestCase):
             json = exists('/usr/lib/python2.7/dist-packages/simplejson/__init__.py')
             self.assertFalse(json)
 
+    def test_build_dep(self):
+        with settings(host_string=self.container_host,
+                      user='root',
+                      password='functionaltests'):
+
             build_dep = apt.build_dep('python-libcloud')
             self.assertTrue(build_dep.succeeded)
             self.assertEqual(build_dep.command,
@@ -113,26 +142,41 @@ class AptTest(unittest.TestCase):
             json = exists('/usr/lib/python2.7/dist-packages/simplejson/__init__.py')
             self.assertTrue(json)
 
+    def test_autoremove(self):
+        with settings(host_string=self.container_host,
+                      user='root',
+                      password='functionaltests'):
+
             autoremove = apt.autoremove()
             self.assertTrue(autoremove.succeeded)
             self.assertEqual(autoremove.command, 'apt-get autoremove --yes')
-
-            autoclean = apt.autoclean()
-            self.assertTrue(autoclean.succeeded)
-            self.assertEqual(autoclean.command, 'apt-get autoclean')
-
-            clean = apt.clean()
-            self.assertTrue(clean.succeeded)
-            self.assertEqual(clean.command, 'apt-get clean')
-            self.assertFalse(exists('/var/cache/apt/archives/*deb'))
 
             autoremove = apt.autoremove(use_sudo=False, verbose=False)
             self.assertTrue(autoremove.succeeded)
             self.assertEqual(autoremove.command, 'apt-get autoremove --yes')
 
+    def test_autoclean(self):
+        with settings(host_string=self.container_host,
+                      user='root',
+                      password='functionaltests'):
+
+            autoclean = apt.autoclean()
+            self.assertTrue(autoclean.succeeded)
+            self.assertEqual(autoclean.command, 'apt-get autoclean')
+
             autoclean = apt.autoclean(use_sudo=False, verbose=False)
             self.assertTrue(autoclean.succeeded)
             self.assertEqual(autoclean.command, 'apt-get autoclean')
+
+    def test_clean(self):
+        with settings(host_string=self.container_host,
+                      user='root',
+                      password='functionaltests'):
+
+            clean = apt.clean()
+            self.assertTrue(clean.succeeded)
+            self.assertEqual(clean.command, 'apt-get clean')
+            self.assertFalse(exists('/var/cache/apt/archives/*deb'))
 
             clean = apt.clean(use_sudo=False, verbose=False)
             self.assertTrue(clean.succeeded)
