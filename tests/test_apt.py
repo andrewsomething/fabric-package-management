@@ -1,4 +1,4 @@
-import unittest
+import unittest, os
 
 from fabric.api import settings, task, run
 from fabric.operations import local
@@ -22,7 +22,9 @@ class AptTest(unittest.TestCase):
         image_name = 'fab_sshd_ubuntu'
         if image_name not in docker('images'):
             print('Building Docker image...')
-            docker('build -t %s .' % image_name)
+            dfile = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                 'Dockerfile')
+            docker('build -t %s -f %s .' % (image_name, dfile))
         else:
             print('Using cached Docker image...')
 
