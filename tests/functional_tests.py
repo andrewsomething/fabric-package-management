@@ -30,39 +30,97 @@ def tear_down(container):
     print('Destroying Docker container...')
     return docker('kill %s' % container)
 
+    print update.command
+    print update.succeeded
 
 def test_apt(container_host):
     print('Running tests for fabric_package_managment.apt')
-    apt.update()
-    apt.upgrade()
-    apt.dist_upgrade()
-    apt.update(use_sudo=False, verbose=False)
-    apt.upgrade(use_sudo=False, verbose=False)
-    apt.dist_upgrade(use_sudo=False, verbose=False)
-    apt.install(['bpython', 'git'])
+
+    update = apt.update()
+    assert update.succeeded
+    assert update.command == 'apt-get update'
+
+    upgrade = apt.upgrade()
+    assert upgrade.succeeded
+    assert upgrade.command == 'apt-get upgrade --yes'
+
+    dist_upgrade = apt.dist_upgrade()
+    assert dist_upgrade.succeeded
+    assert dist_upgrade.command == 'apt-get dist-upgrade --yes'
+
+    update = apt.update(use_sudo=False, verbose=False)
+    assert update.succeeded
+    assert update.command == 'apt-get update'
+
+    upgrade = apt.upgrade(use_sudo=False, verbose=False)
+    assert upgrade.succeeded
+    assert upgrade.command == 'apt-get upgrade --yes'
+
+    dist_upgrade = apt.dist_upgrade(use_sudo=False, verbose=False)
+    assert dist_upgrade.succeeded
+    assert dist_upgrade.command == 'apt-get dist-upgrade --yes'
+
+    install = apt.install(['bpython', 'git'], no_install_recommends=True)
+    assert install.succeeded
+    assert install.command == 'apt-get install --yes --no-install-recommends  bpython git'
     assert exists('/usr/bin/git')
     assert exists('/usr/bin/bpython')
-    apt.install('htop', use_sudo=False, verbose=False)
+
+    install = apt.install('htop', install_suggests=True,
+                          use_sudo=False, verbose=False)
+    assert install.succeeded
+    assert install.command == 'apt-get install --yes  --install-suggests htop'
     assert exists('/usr/bin/htop')
+
     with cd('/tmp'):
-        apt.source("python-libcloud", download_only=True)
+        source = apt.source("python-libcloud", download_only=True)
+    assert source.succeeded
+    assert source.command == 'apt-get source --download-only python-libcloud'
     assert exists('/tmp/libcloud*dsc')
     assert not exists('/tmp/libcloud*/')
-    apt.remove(['bpython', 'git'])
+
+    remove = apt.remove(['bpython', 'git'])
+    assert remove.succeeded
+    assert remove.command == 'apt-get remove --yes  bpython git'
     assert not exists('/usr/bin/git')
     assert not exists('/usr/bin/bpython')
-    apt.remove('htop', purge=True)
+
+    remove = apt.remove('htop', purge=True)
+    assert remove.succeeded
+    assert remove.command == 'apt-get remove --yes --purge htop'
     assert not exists('/usr/bin/htop')
     assert not exists('/usr/lib/python2.7/dist-packages/simplejson/__init__.py')
-    apt.build_dep('python-libcloud')
+
+    build_dep = apt.build_dep('python-libcloud')
+    assert build_dep.succeeded
+    assert build_dep.command == 'apt-get build-dep --yes python-libcloud'
     assert exists('/usr/lib/python2.7/dist-packages/simplejson/__init__.py')
-    apt.autoremove()
-    apt.autoclean()
-    apt.clean()
-    apt.autoremove(use_sudo=False, verbose=False)
-    apt.autoclean(use_sudo=False, verbose=False)
-    apt.clean(use_sudo=False, verbose=False)
+
+    autoremove = apt.autoremove()
+    assert autoremove.succeeded
+    assert autoremove.command == 'apt-get autoremove --yes'
+
+    autoclean = apt.autoclean()
+    assert autoclean.succeeded
+    assert autoclean.command == 'apt-get autoclean'
+
+    clean = apt.clean()
+    assert clean.succeeded
+    assert clean.command == 'apt-get clean'
     assert not exists('/var/cache/apt/archives/*deb')
+
+    autoremove = apt.autoremove(use_sudo=False, verbose=False)
+    assert autoremove.succeeded
+    assert autoremove.command == 'apt-get autoremove --yes'
+
+    autoclean = apt.autoclean(use_sudo=False, verbose=False)
+    assert autoclean.succeeded
+    assert autoclean.command == 'apt-get autoclean'
+
+    clean = apt.clean(use_sudo=False, verbose=False)
+    assert clean.succeeded
+    assert clean.command == 'apt-get clean'
+
     print('All tests for fabric_package_managment.apt succeeded...')
 
 
