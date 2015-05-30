@@ -1,4 +1,4 @@
-from fabric.api import hide, run, settings, sudo
+from fabric.api import hide, run, settings, sudo, settings
 from fabric.context_managers import shell_env
 from fabric.contrib.files import exists
 
@@ -252,3 +252,21 @@ def reboot_required(use_sudo=False, verbose=False):
     """
     return exists('/var/run/reboot-required', use_sudo=use_sudo,
                                               verbose=verbose)
+
+def installed(package, use_sudo=True):
+    """
+    Check if a package is installed on the system.
+
+    Returns `True` if installed, `False` if it is not.
+
+    Args:
+      package (str): The package to check if installed.
+      use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `False`)
+    """
+    func = use_sudo and sudo or run
+    cmd = "dpkg -s {0}".format(package)
+    with settings(warn_only=True):
+        installed = _run_cmd(func, cmd, verbose=False)
+    if installed.find("install ok installed") > -1:
+        return True
+    return False

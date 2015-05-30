@@ -183,3 +183,12 @@ class AptTest(unittest.TestCase):
             clean = apt.clean(use_sudo=False, verbose=False)
             self.assertTrue(clean.succeeded)
             self.assertEqual(clean.command, 'apt-get clean')
+
+    def test_installed(self):
+      with settings(host_string=self.container_host,
+                      user='root',
+                      password='functionaltests'):
+
+        self.assertFalse(apt.installed('rolldice'))
+        apt.install('rolldice')
+        self.assertTrue(apt.installed('rolldice'))
