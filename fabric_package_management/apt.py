@@ -222,6 +222,7 @@ def build_dep(package, assume_yes=True, use_sudo=True, verbose=True):
     Install the build dependencies for a given source package.
 
     Args:
+      package (str): The package whose build dependencies will be installed.
       assume_yes (bool): If `True`, Apt will assume "yes" as answer to all
         prompts and run non-interactively. (Default: `True`)
       use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `True`)
@@ -243,8 +244,9 @@ def reboot_required(use_sudo=False, verbose=False):
     """
     Check if a reboot is required after intalling updates.
 
-    Returns:
-      bool: `True` if a reboot is required, `False` if not.
+    Returns `True` if a reboot is required, `False` if not.
+
+    Args:
       use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `False`)
       verbose (bool): If `False`, hide all output. (Default: `False`)
     """
