@@ -1,4 +1,4 @@
-from fabric.api import hide, run, settings, sudo, settings
+from fabric.api import hide, run, settings, sudo
 from fabric.context_managers import shell_env
 from fabric.contrib.files import exists
 
@@ -13,6 +13,7 @@ def _run_cmd(func, cmd, verbose):
         with settings(hide('everything')):
             return func(cmd)
 
+
 def install(packages, assume_yes=True, no_install_recommends=False,
             install_suggests=False, use_sudo=True, verbose=True):
     """
@@ -26,7 +27,8 @@ def install(packages, assume_yes=True, no_install_recommends=False,
         dependency for installing. (Default: `False`)
       assume_yes (bool): If `True`, Apt will assume "yes" as answer to all
         prompts and run non-interactively. (Default: `True`)
-      use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `True`)
+      use_sudo (bool): If `True`, will use `sudo` instead of `run`.
+        (Default: `True`)
       verbose (bool): If `False`, hide all output. (Default: `True`)
     """
     if not isinstance(packages, str):
@@ -61,7 +63,8 @@ def update(use_sudo=True, verbose=True):
     Update Apt's package index files on the remote host.
 
     Args:
-      use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `True`)
+      use_sudo (bool): If `True`, will use `sudo` instead of `run`.
+        (Default: `True`)
       verbose (bool): If `False`, hide all output. (Default: `True`)
     """
     func = use_sudo and sudo or run
@@ -77,7 +80,8 @@ def upgrade(assume_yes=True, use_sudo=True, verbose=True):
     Args:
       assume_yes (bool): If `True`, Apt will assume "yes" as answer to all
         prompts and run non-interactively. (Default: `True`)
-      use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `True`)
+      use_sudo (bool): If `True`, will use `sudo` instead of `run`.
+        (Default: `True`)
       verbose (bool): If `False`, hide all output. (Default: `True`)
     """
     if assume_yes:
@@ -90,6 +94,7 @@ def upgrade(assume_yes=True, use_sudo=True, verbose=True):
 
     return _run_cmd(func, cmd, verbose)
 
+
 def dist_upgrade(assume_yes=True, use_sudo=True, verbose=True):
     """
     Same as `upgrade`, but Apt will attempt to intelligently handle changing
@@ -98,7 +103,8 @@ def dist_upgrade(assume_yes=True, use_sudo=True, verbose=True):
     Args:
       assume_yes (bool): If `True`, Apt will assume "yes" as answer to all
         prompts and run non-interactively. (Default: `True`)
-      use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `True`)
+      use_sudo (bool): If `True`, will use `sudo` instead of `run`.
+        (Default: `True`)
       verbose (bool): If `False`, hide all output. (Default: `True`)
     """
     if assume_yes:
@@ -123,7 +129,8 @@ def remove(packages, purge=False, assume_yes=True, use_sudo=True,
         (Default: `False`)
       assume_yes (bool): If `True`, Apt will assume "yes" as answer to all
         prompts and run non-interactively. (Default: `True`)
-      use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `True`)
+      use_sudo (bool): If `True`, will use `sudo` instead of `run`.
+        (Default: `True`)
       verbose (bool): If `False`, hide all output. (Default: `True`)
     """
     if not isinstance(packages, str):
@@ -150,7 +157,8 @@ def clean(use_sudo=True, verbose=True):
     Clears out retrieved package files.
 
     Args:
-      use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `True`)
+      use_sudo (bool): If `True`, will use `sudo` instead of `run`.
+       (Default: `True`)
       verbose (bool): If `False`, hide all output. (Default: `True`)
     """
     func = use_sudo and sudo or run
@@ -165,7 +173,8 @@ def autoclean(use_sudo=True, verbose=True):
     be downloaded.
 
     Args:
-      use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `True`)
+      use_sudo (bool): If `True`, will use `sudo` instead of `run`.
+        (Default: `True`)
       verbose (bool): If `False`, hide all output. (Default: `True`)
     """
     func = use_sudo and sudo or run
@@ -180,7 +189,8 @@ def autoremove(assume_yes=True, use_sudo=True, verbose=True):
     Args:
       assume_yes (bool): If `True`, Apt will assume "yes" as answer to all
         prompts and run non-interactively. (Default: `True`)
-      use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `True`)
+      use_sudo (bool): If `True`, will use `sudo` instead of `run`.
+        (Default: `True`)
       verbose (bool): If `False`, hide all output. (Default: `True`)
     """
 
@@ -194,6 +204,7 @@ def autoremove(assume_yes=True, use_sudo=True, verbose=True):
 
     return _run_cmd(func, cmd, verbose)
 
+
 def source(package, download_only=False, use_sudo=False, verbose=True):
     """
     Download a given source package.
@@ -202,7 +213,8 @@ def source(package, download_only=False, use_sudo=False, verbose=True):
       package (str): The source package to download.
       download_only (bool): If `True`, the source package will not be
         unpacked. (Default: `False`)
-      use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `False`)
+      use_sudo (bool): If `True`, will use `sudo` instead of `run`.
+        (Default: `False`)
       verbose (bool): If `False`, hide all output. (Default: `True`)
     """
 
@@ -225,7 +237,8 @@ def build_dep(package, assume_yes=True, use_sudo=True, verbose=True):
       package (str): The package whose build dependencies will be installed.
       assume_yes (bool): If `True`, Apt will assume "yes" as answer to all
         prompts and run non-interactively. (Default: `True`)
-      use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `True`)
+      use_sudo (bool): If `True`, will use `sudo` instead of `run`.
+        (Default: `True`)
       verbose (bool): If `False`, hide all output. (Default: `True`)
     """
 
@@ -247,11 +260,14 @@ def reboot_required(use_sudo=False, verbose=False):
     Returns `True` if a reboot is required, `False` if not.
 
     Args:
-      use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `False`)
+      use_sudo (bool): If `True`, will use `sudo` instead of `run`.
+        (Default: `False`)
       verbose (bool): If `False`, hide all output. (Default: `False`)
     """
-    return exists('/var/run/reboot-required', use_sudo=use_sudo,
-                                              verbose=verbose)
+    return exists('/var/run/reboot-required',
+                  use_sudo=use_sudo,
+                  verbose=verbose)
+
 
 def installed(package, use_sudo=True):
     """
@@ -261,7 +277,8 @@ def installed(package, use_sudo=True):
 
     Args:
       package (str): The package to check if installed.
-      use_sudo (bool): If `True`, will use `sudo` instead of `run`. (Default: `False`)
+      use_sudo (bool): If `True`, will use `sudo` instead of `run`.
+        (Default: `False`)
     """
     func = use_sudo and sudo or run
     cmd = "dpkg -s {0}".format(package)

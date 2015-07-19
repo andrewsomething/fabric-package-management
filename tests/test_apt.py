@@ -1,6 +1,7 @@
-import unittest, os
+import unittest
+import os
 
-from fabric.api import settings, task, run
+from fabric.api import settings
 from fabric.operations import local
 from fabric.context_managers import cd
 from fabric.contrib.files import exists
@@ -129,7 +130,8 @@ class AptTest(unittest.TestCase):
                              'apt-get remove --yes --purge htop')
             htop = exists('/usr/bin/htop')
             self.assertFalse(htop)
-            json = exists('/usr/lib/python2.7/dist-packages/simplejson/__init__.py')
+            json = exists(
+                '/usr/lib/python2.7/dist-packages/simplejson/__init__.py')
             self.assertFalse(json)
 
     def test_build_dep(self):
@@ -141,7 +143,8 @@ class AptTest(unittest.TestCase):
             self.assertTrue(build_dep.succeeded)
             self.assertEqual(build_dep.command,
                              'apt-get build-dep --yes python-libcloud')
-            json = exists('/usr/lib/python2.7/dist-packages/simplejson/__init__.py')
+            json = exists(
+                '/usr/lib/python2.7/dist-packages/simplejson/__init__.py')
             self.assertTrue(json)
 
     def test_autoremove(self):
@@ -185,10 +188,10 @@ class AptTest(unittest.TestCase):
             self.assertEqual(clean.command, 'apt-get clean')
 
     def test_installed(self):
-      with settings(host_string=self.container_host,
+        with settings(host_string=self.container_host,
                       user='root',
                       password='functionaltests'):
 
-        self.assertFalse(apt.installed('rolldice'))
-        apt.install('rolldice')
-        self.assertTrue(apt.installed('rolldice'))
+            self.assertFalse(apt.installed('rolldice'))
+            apt.install('rolldice')
+            self.assertTrue(apt.installed('rolldice'))
