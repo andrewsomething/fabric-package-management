@@ -10,7 +10,7 @@ from fabric_package_management import apt
 
 
 def docker(cmd):
-    return local("docker %s" % cmd, capture=False)
+    return local("docker %s" % cmd, capture=True)
 
 
 class AptTest(unittest.TestCase):
@@ -37,7 +37,7 @@ class AptTest(unittest.TestCase):
 
     def tearDown(self):
         print('Destroying Docker container...')
-        return docker('kill %s' % self.container)
+        local('docker kill %s' % self.container)
 
     def test_update(self):
         with settings(host_string=self.container_host,
