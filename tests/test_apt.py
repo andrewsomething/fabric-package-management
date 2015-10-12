@@ -37,7 +37,7 @@ class AptTest(unittest.TestCase):
 
     def tearDown(self):
         print('Destroying Docker container...')
-        local('docker kill %s' % self.container)
+        return docker('kill %s' % self.container)
 
     def test_update(self):
         with settings(host_string=self.container_host,

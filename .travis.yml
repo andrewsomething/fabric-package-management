@@ -9,6 +9,11 @@ before_install:
 install:
     - pip install fabric
     - pip install nose
+    # place apparmor docker profile in complain mode
+    # to workaround https://github.com/travis-ci/travis-ci/issues/4661
+    - sudo apt-get -y update
+    - sudo apt-get -y install apparmor-utils
+    - sudo aa-complain /etc/apparmor.d/docker
 script:
     - sudo service docker restart; sleep 10
     - nosetests -v
