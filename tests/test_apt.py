@@ -10,7 +10,7 @@ from fabric_package_management import apt
 
 
 def docker(cmd):
-    return local("docker %s" % cmd, capture=True)
+    return local("docker %s" % cmd, capture=False)
 
 
 class AptTest(unittest.TestCase):
