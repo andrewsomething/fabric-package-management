@@ -9,6 +9,9 @@ before_install:
 install:
     - pip install fabric
     - pip install nose
+    - pip install coverage
 script:
     - sudo service docker restart; sleep 10
-    - nosetests -v
+    - nosetests -v --with-coverage
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
