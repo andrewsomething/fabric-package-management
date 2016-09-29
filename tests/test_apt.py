@@ -24,7 +24,7 @@ class AptTest(unittest.TestCase):
         if image_name not in docker('images'):
             print('Building Docker image...')
             dfile = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                 'Dockerfile')
+                                 'Dockerfile.apt')
             docker('build -t %s -f %s .' % (image_name, dfile))
         else:
             print('Using cached Docker image...')
