@@ -5,13 +5,13 @@ python:
 services:
   - docker
 before_install:
-    - docker build -t fab_sshd_ubuntu tests/
+    - docker build -t fab_sshd_ubuntu -f tests/Dockerfile.apt .
 install:
     - pip install fabric
     - pip install nose
     - pip install coverage
 script:
-    - sudo service docker restart; sleep 10
+    - sudo service docker restart; sleep 15
     - nosetests -v --with-coverage
 after_success:
     - bash <(curl -s https://codecov.io/bash)
