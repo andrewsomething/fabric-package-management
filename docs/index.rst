@@ -33,7 +33,7 @@ Example
     from fabric.context_managers import cd
     from fabric.operations import reboot
 
-    from fabric_package_managment import apt
+    from fabric_package_management import apt
 
     @task()
     def run():
