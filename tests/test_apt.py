@@ -40,6 +40,11 @@ class AptTest(unittest.TestCase):
         return docker('rm -f %s' % self.container)
 
     def test_update(self):
+
+        test_source = 'trusty-backports'
+        test_update_command = "apt-get update -o Dir::Etc::sourceparts='-' "
+        test_update_command += "-o Dir::Etc::sourcelist='sources.list.d/{}.list'".format(test_source)
+
         with settings(host_string=self.container_host,
                       user='root',
                       password='functionaltests'):
@@ -51,6 +56,10 @@ class AptTest(unittest.TestCase):
             update = apt.update(use_sudo=False, verbose=False)
             self.assertTrue(update.succeeded)
             self.assertEqual(update.command, 'apt-get update')
+
+            update = apt.update(source_name=test_source)
+            self.assertTrue(update.succeeded)
+            self.assertEqual(update.command, test_update_command)
 
     def test_upgrade(self):
         with settings(host_string=self.container_host,
