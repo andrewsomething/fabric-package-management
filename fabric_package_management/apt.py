@@ -15,7 +15,7 @@ def _run_cmd(func, cmd, verbose):
 
 
 def install(packages, assume_yes=True, no_install_recommends=False,
-            install_suggests=False, use_sudo=True, verbose=True):
+            install_suggests=False, use_sudo=True, verbose=True, force_yes=False):
     """
     Install packages on the remote host via Apt.
 
@@ -30,30 +30,29 @@ def install(packages, assume_yes=True, no_install_recommends=False,
       use_sudo (bool): If `True`, will use `sudo` instead of `run`.
         (Default: `True`)
       verbose (bool): If `False`, hide all output. (Default: `True`)
+      force_yes: add the --force-yes apt-get option. (Default: `False`)
     """
     if not isinstance(packages, str):
         packages = ' '.join(packages)
 
+    options = list()
+
     if assume_yes:
-        yes = '--yes'
-    else:
-        yes = ''
+        options.append('--yes')
 
     if no_install_recommends:
-        recommends = '--no-install-recommends'
-    else:
-        recommends = ''
+        options.append('--no-install-recommends')
 
     if install_suggests:
-        suggests = '--install-suggests'
-    else:
-        suggests = ''
+        options.append('--install-suggests')
+
+    if force_yes:
+        options.append('--force-yes')
 
     func = use_sudo and sudo or run
-    cmd = 'apt-get install {0} {1} {2} {3}'.format(yes,
-                                                   recommends,
-                                                   suggests,
-                                                   packages)
+    cmd = 'apt-get install {0} {1}'.format(
+        ' '.join(options), packages
+    )
 
     return _run_cmd(func, cmd, verbose)
 
@@ -290,3 +289,12 @@ def installed(package, use_sudo=True):
     if installed.find("install ok installed") > -1:
         return True
     return False
+
+
+def check_version_available(package, version):
+    output = run("apt-cache madison {}".format(package), quiet=True).split("\n")
+    versions = []
+    for line in output:
+        parts = line.split("|", 2)
+        versions.append(parts[1].strip())
+    return version in versions
