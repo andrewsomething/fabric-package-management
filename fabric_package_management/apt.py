@@ -30,7 +30,7 @@ def install(packages, assume_yes=True, no_install_recommends=False,
       use_sudo (bool): If `True`, will use `sudo` instead of `run`.
         (Default: `True`)
       verbose (bool): If `False`, hide all output. (Default: `True`)
-      force_yes: add the --force-yes apt-get option. (Default: `False`)
+      force_yes (bool): add the --force-yes apt-get option. (Default: `False`)
     """
     if not isinstance(packages, str):
         packages = ' '.join(packages)
