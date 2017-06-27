@@ -5,7 +5,7 @@ with open('README.md') as f:
 
 setup(
     name='fabric-package-management',
-    version='0.1.1',
+    version='0.1.2',
     description='A collection of fabric tasks for package management',
     long_description=long_description,
     url='https://github.com/andrewsomething/fabric-package-management',
