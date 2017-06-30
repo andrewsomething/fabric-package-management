@@ -40,6 +40,11 @@ class AptTest(unittest.TestCase):
         return docker('rm -f %s' % self.container)
 
     def test_update(self):
+
+        test_source = 'trusty-backports'
+        test_update_command = "apt-get update -o Dir::Etc::sourceparts='-' "
+        test_update_command += "-o Dir::Etc::sourcelist='sources.list.d/{}.list'".format(test_source)
+
         with settings(host_string=self.container_host,
                       user='root',
                       password='functionaltests'):
@@ -51,6 +56,10 @@ class AptTest(unittest.TestCase):
             update = apt.update(use_sudo=False, verbose=False)
             self.assertTrue(update.succeeded)
             self.assertEqual(update.command, 'apt-get update')
+
+            update = apt.update(source_name=test_source)
+            self.assertTrue(update.succeeded)
+            self.assertEqual(update.command, test_update_command)
 
     def test_upgrade(self):
         with settings(host_string=self.container_host,
@@ -87,7 +96,7 @@ class AptTest(unittest.TestCase):
             install = apt.install(['bpython', 'git'],
                                   no_install_recommends=True)
             self.assertTrue(install.succeeded)
-            expt = 'apt-get install --yes --no-install-recommends  bpython git'
+            expt = 'apt-get install --yes --no-install-recommends bpython git'
             self.assertEqual(install.command, expt)
             self.assertTrue(exists('/usr/bin/git'))
             self.assertTrue(exists('/usr/bin/bpython'))
@@ -95,7 +104,7 @@ class AptTest(unittest.TestCase):
             install = apt.install('htop', install_suggests=True,
                                   use_sudo=False, verbose=False)
             self.assertTrue(install.succeeded)
-            expt = 'apt-get install --yes  --install-suggests htop'
+            expt = 'apt-get install --yes --install-suggests htop'
             self.assertEqual(install.command, expt)
             self.assertTrue(exists('/usr/bin/htop'))
 
@@ -195,3 +204,10 @@ class AptTest(unittest.TestCase):
             self.assertFalse(apt.installed('rolldice'))
             apt.install('rolldice')
             self.assertTrue(apt.installed('rolldice'))
+
+    def test_check_version_available(self):
+        with settings(host_string=self.container_host,
+                      user='root',
+                      password='functionaltests'):
+            self.assertTrue(apt.check_version_available(package='apache2', version='2.4.7-1ubuntu4'))
+            self.assertFalse(apt.check_version_available(package='apache2', version='1.0'))
