@@ -4,7 +4,7 @@ As the name implies, fabric-package-management is a collection of [Fabric](http:
 tasks for package management. There's nothing too fancy going on here. It's aim is to simply not
 have to copy and paste similar convenience functions into many a Fabfile.
 
-[![Build Status](https://travis-ci.org/andrewsomething/fabric-package-management.svg?branch=master)](https://travis-ci.org/andrewsomething/fabric-package-management) [![codecov](https://codecov.io/gh/andrewsomething/fabric-package-management/branch/master/graph/badge.svg)](https://codecov.io/gh/andrewsomething/fabric-package-management)
+[![Build Status](https://travis-ci.org/andrewsomething/fabric-package-management.svg?branch=master)](https://travis-ci.org/andrewsomething/fabric-package-management) [![docs](https://readthedocs.org/projects/fabric-package-management/badge/?version=latest)](http://fabric-package-management.readthedocs.io/en/latest/) [![codecov](https://codecov.io/gh/andrewsomething/fabric-package-management/branch/master/graph/badge.svg)](https://codecov.io/gh/andrewsomething/fabric-package-management)
 
 
 ## Example:
